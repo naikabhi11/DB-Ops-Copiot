@@ -1,4 +1,4 @@
-export type DBType = 'postgres' | 'mongodb' | 'mysql' | 'redis' | 'sqlserver';
+export type DBType = 'postgres' | 'mongodb';
 export type UserRole = 'admin' | 'operator' | 'viewer';
 
 export interface User {
@@ -21,14 +21,16 @@ export interface MetricData {
   cpu: number;
   memory: number;
   iops: number;
+  diskIo?: number;
   latency: number;
+  queryLatency?: number;
+  queryThroughput?: number;
   connections: number;
   replicationLag?: number;
-  memoryUsage?: number;
-  fragmentationRatio?: number;
-  hits?: number;
-  misses?: number;
   diskUsage?: number;
+  lockWaits?: number;
+  longRunningQueries?: number;
+  slowQueries?: number;
 }
 
 export interface Alert {
