@@ -1,0 +1,5 @@
+{
+  "name": "DB Ops Copilot",
+  "description": "AI-powered database monitoring, slow query analysis, and capacity planning for MongoDB and PostgreSQL.",
+  "requestFramePermissions": []
+}
