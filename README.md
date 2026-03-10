@@ -1,20 +1,65 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# DB Ops Copilot (MongoDB + PostgreSQL)
 
-# Run and deploy your AI Studio app
+AI-powered Database Operations Copilot with a dark-theme dashboard for real-time observability, incident response, and query optimization.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/0ea89c40-9ccf-4292-9409-9e9eca44d0e6
+- **Role-based login** (admin/operator/viewer).
+- **Multiple environments** (development, staging, production).
+- **Database Monitoring**
+  - CPU, memory, disk I/O, connection counts.
+  - Replication lag tracking.
+  - Query throughput and latency trends.
+  - Disk usage growth snapshots.
+- **Slow Query Analyzer**
+  - Upload/query log input.
+  - AI + local fallback recommendations.
+  - Index and rewrite suggestions.
+- **Incident Detection**
+  - Detects CPU saturation, replication lag spikes, lock contention, and long-running queries.
+  - Runbook-style troubleshooting guidance.
+- **Capacity Planning**
+  - Storage/index growth forecasting.
+  - Scaling recommendations (vertical/horizontal).
+- **Query Plan Visualizer**
+  - Visual plan tree.
+  - Highlights expensive scan operations.
+- **Alerting System**
+  - Threshold rules for CPU/memory/lag/latency.
+  - Email/Slack channel configuration.
+- **AI Assistant**
+  - Chat for diagnostics and optimization questions.
 
-## Run Locally
+## Tech Stack
 
-**Prerequisites:**  Node.js
+- React + Vite + TypeScript
+- Express (API + Vite middleware)
+- SQLite (`better-sqlite3`) for local persistence
+- Recharts + Lucide icons
+- Gemini API integration with local fallback behavior
 
+## Run locally
 
 1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+   ```bash
+   npm install
+   ```
+2. (Optional) set `GEMINI_API_KEY` in `.env.local` for full AI responses.
+3. Start app:
+   ```bash
+   npm run dev
+   ```
+4. Open `http://localhost:3000`
+
+## Seeded users
+
+- `admin@example.com` / `admin123`
+- `operator@example.com` / `operator123`
+- `viewer@example.com` / `viewer123`
+
+## Validation
+
+```bash
+npm run lint
+npm run build
+```

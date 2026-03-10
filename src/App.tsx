@@ -160,13 +160,19 @@ export default function App() {
     setShowAddModal(false);
   };
 
-  // Fetch metrics when connection changes
+  // Fetch metrics when connection changes + real-time polling
   useEffect(() => {
-    if (selectedConnection) {
+    if (!selectedConnection) return;
+
+    const fetchMetrics = () => {
       fetch(`/api/metrics/${selectedConnection.id}`)
         .then(res => res.json())
         .then(setMetrics);
-    }
+    };
+
+    fetchMetrics();
+    const interval = setInterval(fetchMetrics, 15000);
+    return () => clearInterval(interval);
   }, [selectedConnection]);
 
   if (!user) {
@@ -356,9 +362,6 @@ export default function App() {
                   >
                     <option value="postgres">PostgreSQL</option>
                     <option value="mongodb">MongoDB</option>
-                    <option value="mysql">MySQL</option>
-                    <option value="redis">Redis</option>
-                    <option value="sqlserver">SQL Server</option>
                   </select>
                 </div>
                 <div>
@@ -414,18 +417,16 @@ const DashboardView = ({ metrics, connection }: { metrics: MetricData[], connect
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Stat label="CPU Usage" value={`${latest.cpu?.toFixed(1)}%`} icon={Cpu} trend="up" />
-        <Stat label="Memory" value={connection?.type === 'redis' ? `${latest.memoryUsage?.toFixed(1)}MB` : `${latest.memory?.toFixed(1)}%`} icon={HardDrive} />
+        <Stat label="Memory" value={`${latest.memory?.toFixed(1)}%`} icon={HardDrive} />
         <Stat label="Latency" value={`${latest.latency?.toFixed(1)}ms`} icon={Clock} trend="down" />
-        <Stat label={connection?.type === 'redis' ? "Hits/sec" : "Connections"} value={connection?.type === 'redis' ? latest.hits?.toFixed(0) || 0 : latest.connections || 0} icon={Users} />
+        <Stat label="Connections" value={latest.connections || 0} icon={Users} />
       </div>
 
-      {connection?.type === 'redis' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Stat label="Frag. Ratio" value={latest.fragmentationRatio?.toFixed(2) || '1.0'} icon={Zap} />
-          <Stat label="Cache Misses" value={latest.misses?.toFixed(0) || 0} icon={AlertTriangle} />
-          <Stat label="Memory Usage" value={`${latest.memoryUsage?.toFixed(1)} MB`} icon={HardDrive} />
-        </div>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Stat label="Replication Lag" value={`${latest.replicationLag?.toFixed(2) || '0.00'}s`} icon={Zap} />
+        <Stat label="Query Throughput" value={latest.queryThroughput?.toFixed(0) || 0} icon={BarChart3} />
+        <Stat label="Disk I/O" value={`${latest.diskIo?.toFixed(1) || '0.0'} MB/s`} icon={HardDrive} />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card title="Performance Trends" icon={Activity}>
